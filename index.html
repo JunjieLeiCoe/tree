@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Story - Sakura Love Tree</title>
+    <title>Our Story</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
     
     <link type="text/css" rel="stylesheet" href="./index_files/default.css">
@@ -17,131 +17,23 @@
     <script type="text/javascript" src="./index_files/functions.js" charset="utf-8"></script>
     <script type="text/javascript" src="./index_files/love.js" charset="utf-8"></script>
     <script type="text/javascript" src="./config.js"></script>
-    
-    <style>
-        .music-btn {
-            position: fixed;
-            z-index: 10001;
-            top: 15px;
-            right: 15px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 0 10px rgba(255, 182, 193, 0.5));
-            background: linear-gradient(135deg, rgba(255, 182, 193, 0.3), rgba(255, 105, 180, 0.2));
-            border: 2px solid rgba(255, 182, 193, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .music-btn:hover {
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 20px rgba(255, 182, 193, 0.8));
-            background: linear-gradient(135deg, rgba(255, 182, 193, 0.5), rgba(255, 105, 180, 0.4));
-        }
-        
-        .music-btn img {
-            width: 30px;
-            height: 30px;
-            filter: brightness(1.2);
-        }
-        
-        .rotateImages {
-            animation: myRotate 4s linear infinite;
-        }
-        
-        @keyframes myRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .title-header {
-            text-align: center;
-            padding: 20px 0 10px;
-            font-size: 28px;
-            background: linear-gradient(90deg, #FFB6C1, #FF69B4, #FF1493, #FF69B4, #FFB6C1);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 3s linear infinite;
-            text-shadow: none;
-            filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.3));
-        }
-        
-        @keyframes shimmer {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-        
-        .sakura-particle {
-            position: fixed;
-            pointer-events: none;
-            width: 15px;
-            height: 15px;
-            background: radial-gradient(ellipse at center, #FFB6C1 0%, #FF69B4 50%, transparent 70%);
-            border-radius: 150% 0 150% 0;
-            opacity: 0.7;
-            animation: sakuraFall linear infinite;
-            z-index: 9999;
-        }
-        
-        @keyframes sakuraFall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg) translateX(0);
-                opacity: 1;
-            }
-            25% {
-                transform: translateY(25vh) rotate(90deg) translateX(20px);
-            }
-            50% {
-                transform: translateY(50vh) rotate(180deg) translateX(-20px);
-            }
-            75% {
-                transform: translateY(75vh) rotate(270deg) translateX(10px);
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg) translateX(-10px);
-                opacity: 0;
-            }
-        }
-        
-        .sparkle {
-            position: fixed;
-            width: 4px;
-            height: 4px;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: sparkle 1.5s ease-in-out infinite;
-            z-index: 9998;
-        }
-        
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0); }
-            50% { opacity: 1; transform: scale(1); }
-        }
-    </style>
 </head>
 <body>
 
 <div class="music-btn" onclick="toggleMusic(this)">
     <img src="https://ajlovechina.github.io/loveBalloon/static/music.png" alt="Music">
 </div>
-<audio class="song-audio-autoplay" controls loop style="display: none; visibility: hidden">
+<audio class="song-audio-autoplay" loop style="display: none;">
     <source src="./index_files/music.mp3" type="audio/mp3"/>
 </audio>
 
+<div class="petal-bg" id="petal-container"></div>
+
 <div id="main">
-    <h1 class="title-header">🌸 Sakura Love Story 🌸</h1>
+    <h1 class="title-header">Sakura</h1>
     
     <div id="error">
-        This page uses HTML5 Canvas. Please use a modern browser like 
-        <a href="https://www.google.com/chrome/">Chrome</a> or 
-        <a href="https://www.mozilla.org/firefox/">Firefox</a>.
+        This page requires HTML5 Canvas. Please use Chrome or Firefox.
     </div>
     
     <div id="wrap">
@@ -168,47 +60,40 @@ function toggleMusic(btn) {
     }
 }
 
-function createSakuraParticles() {
-    var container = document.body;
+(function createPetals() {
+    var container = document.getElementById('petal-container');
+    var petalCount = 8;
     
-    for (var i = 0; i < 15; i++) {
+    function addPetal() {
+        var petal = document.createElement('div');
+        petal.className = 'floating-petal';
+        petal.style.left = (Math.random() * 100) + 'vw';
+        petal.style.animationDuration = (Math.random() * 8 + 10) + 's';
+        petal.style.animationDelay = '0s';
+        
+        var size = Math.random() * 8 + 8;
+        petal.style.width = size + 'px';
+        petal.style.height = size + 'px';
+        
+        container.appendChild(petal);
+        
         setTimeout(function() {
-            var petal = document.createElement('div');
-            petal.className = 'sakura-particle';
-            petal.style.left = Math.random() * 100 + 'vw';
-            petal.style.animationDuration = (Math.random() * 5 + 8) + 's';
-            petal.style.animationDelay = Math.random() * 5 + 's';
-            petal.style.width = (Math.random() * 10 + 8) + 'px';
-            petal.style.height = (Math.random() * 10 + 8) + 'px';
-            container.appendChild(petal);
-            
-            setTimeout(function() {
-                if (petal.parentNode) {
-                    petal.parentNode.removeChild(petal);
-                }
-            }, 15000);
-        }, i * 500);
+            if (petal.parentNode) {
+                petal.parentNode.removeChild(petal);
+            }
+        }, 18000);
     }
-}
-
-function createSparkles() {
-    var container = document.body;
     
-    for (var i = 0; i < 20; i++) {
-        var sparkle = document.createElement('div');
-        sparkle.className = 'sparkle';
-        sparkle.style.left = Math.random() * 100 + 'vw';
-        sparkle.style.top = Math.random() * 100 + 'vh';
-        sparkle.style.animationDelay = Math.random() * 2 + 's';
-        sparkle.style.width = (Math.random() * 3 + 2) + 'px';
-        sparkle.style.height = sparkle.style.width;
-        container.appendChild(sparkle);
+    for (var i = 0; i < petalCount; i++) {
+        setTimeout(addPetal, i * 800);
     }
-}
-
-setInterval(createSakuraParticles, 8000);
-createSakuraParticles();
-createSparkles();
+    
+    setInterval(function() {
+        if (container.children.length < 12) {
+            addPetal();
+        }
+    }, 2500);
+})();
 </script>
 
 <script>
@@ -219,10 +104,10 @@ createSparkles();
     }));
     
     $("#clock-box-inside-text").html(
-        '<span style="color: #FF69B4; font-weight: bold;">' + config.names[0] + '</span>' +
+        '<span style="color: #c9929e;">' + config.names[0] + '</span>' +
         '<span class="STYLE1"> & </span>' +
-        '<span style="color: #FF69B4; font-weight: bold;">' + config.names[1] + '</span>' +
-        '<span class="STYLE1"> have been in love for</span>'
+        '<span style="color: #c9929e;">' + config.names[1] + '</span>' +
+        '<span class="STYLE1"> have been together for</span>'
     );
 </script>
 
@@ -244,7 +129,7 @@ createSparkles();
         var opts = {
             seed: {
                 x: width / 2 - 20,
-                color: "rgb(255, 105, 180)",
+                color: "rgb(200, 146, 158)",
                 scale: 2
             },
             branch: [
@@ -275,7 +160,7 @@ createSparkles();
                 height: 5,
                 speed: 10,
             }
-        }
+        };
 
         var tree = new Tree(canvas[0], width, height, opts);
         var seed = tree.seed;
@@ -339,13 +224,12 @@ createSparkles();
             tree.snapshot("p2", 500, 0, 610, 680);
 
             canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
-            canvas.css("background", "rgba(26, 26, 46, 0.3)");
+            canvas.css("background", "rgba(253, 248, 245, 0.15)");
             $await(Jscex.Async.sleep(300));
             canvas.css("background", "none");
         }));
 
         var jumpAnimate = eval(Jscex.compile("async", function () {
-            var ctx = tree.ctx;
             while (true) {
                 tree.ctx.clearRect(0, 0, width, height);
                 tree.jump();
