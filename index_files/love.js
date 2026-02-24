@@ -406,254 +406,147 @@
         }
     }
 
-    Cat = function(tree, x, y, color, isPlayful, name) {
+    Cat = function(tree, x, y, color) {
         this.tree = tree;
         this.x = x;
         this.y = y;
         this.color = color;
-        this.isPlayful = isPlayful;
-        this.name = name;
-        
-        this.size = randomFloat(18, 24);
-        this.direction = random(0, 1) ? 1 : -1;
-        this.speed = isPlayful ? randomFloat(1.2, 2.5) : randomFloat(0.3, 0.6);
-        this.baseY = y;
-        
-        this.animPhase = randomFloat(0, Math.PI * 2);
-        this.animSpeed = isPlayful ? randomFloat(0.15, 0.25) : randomFloat(0.05, 0.08);
-        
-        this.jumpPhase = 0;
-        this.isJumping = false;
-        this.jumpHeight = 0;
-        
+        this.size = 22;
         this.tailPhase = randomFloat(0, Math.PI * 2);
-        this.earWiggle = 0;
-        
-        this.idleTime = 0;
-        this.maxIdleTime = isPlayful ? random(60, 150) : random(200, 500);
-        this.isIdle = !isPlayful;
-        
-        this.minX = 80;
-        this.maxX = tree.width - 80;
+        this.tailSpeed = randomFloat(0.02, 0.04);
+        this.breathPhase = randomFloat(0, Math.PI * 2);
+        this.breathSpeed = randomFloat(0.03, 0.05);
         
         if (color === 'gold') {
-            this.bodyColor = {r: 218, g: 165, b: 105};
-            this.lightColor = {r: 238, g: 195, b: 145};
-            this.darkColor = {r: 178, g: 130, b: 75};
+            this.furColor = '#d4a55a';
+            this.furLight = '#e8c88a';
+            this.furDark = '#a07840';
         } else {
-            this.bodyColor = {r: 150, g: 155, b: 165};
-            this.lightColor = {r: 185, g: 190, b: 200};
-            this.darkColor = {r: 110, g: 115, b: 125};
+            this.furColor = '#9ea5b0';
+            this.furLight = '#c5ccd5';
+            this.furDark = '#6a7078';
         }
     }
     
     Cat.prototype = {
         draw: function() {
             var ctx = this.tree.ctx;
-            var bounce = this.isIdle ? 0 : Math.sin(this.animPhase) * 2;
-            var legOffset = this.isIdle ? 0 : Math.sin(this.animPhase * 2) * 3;
-            
-            ctx.save();
-            ctx.translate(this.x, this.y - this.jumpHeight);
-            ctx.scale(this.direction, 1);
-            
             var s = this.size;
-            
-            ctx.fillStyle = 'rgb(' + this.darkColor.r + ',' + this.darkColor.g + ',' + this.darkColor.b + ')';
+            var breathOffset = Math.sin(this.breathPhase) * 0.5;
             
             ctx.save();
-            ctx.translate(-s * 0.8, -s * 0.1);
-            ctx.rotate(Math.sin(this.tailPhase) * 0.4);
+            ctx.translate(this.x, this.y);
+            
+            var tailCurve = Math.sin(this.tailPhase) * 0.3;
+            ctx.fillStyle = this.furColor;
             ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.quadraticCurveTo(-s * 0.3, -s * 0.5, -s * 0.6, -s * 0.3);
-            ctx.quadraticCurveTo(-s * 0.8, -s * 0.1, -s * 0.7, s * 0.1);
-            ctx.quadraticCurveTo(-s * 0.5, s * 0.2, -s * 0.2, 0);
+            ctx.moveTo(-s * 0.4, -s * 0.2);
+            ctx.quadraticCurveTo(
+                -s * 0.7 + tailCurve * 10, -s * 0.8,
+                -s * 0.5 + tailCurve * 15, -s * 1.2
+            );
+            ctx.quadraticCurveTo(
+                -s * 0.4 + tailCurve * 12, -s * 1.1,
+                -s * 0.35, -s * 0.2
+            );
             ctx.closePath();
             ctx.fill();
-            ctx.restore();
             
-            ctx.fillStyle = 'rgb(' + this.darkColor.r + ',' + this.darkColor.g + ',' + this.darkColor.b + ')';
+            ctx.fillStyle = this.furColor;
             ctx.beginPath();
-            ctx.ellipse(-s * 0.25, s * 0.35 + legOffset, s * 0.12, s * 0.25, 0.1, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(-s * 0.55, s * 0.35 - legOffset, s * 0.12, s * 0.25, -0.1, 0, Math.PI * 2);
+            ctx.ellipse(0, 0, s * 0.45, s * 0.35 + breathOffset, 0, 0, Math.PI * 2);
             ctx.fill();
             
+            ctx.fillStyle = this.furLight;
             ctx.beginPath();
-            ctx.ellipse(s * 0.25, s * 0.35 - legOffset, s * 0.12, s * 0.25, -0.1, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(s * 0.45, s * 0.35 + legOffset, s * 0.12, s * 0.25, 0.1, 0, Math.PI * 2);
+            ctx.ellipse(s * 0.1, s * 0.1, s * 0.2, s * 0.15, 0.3, 0, Math.PI * 2);
             ctx.fill();
             
-            var bodyGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, s);
-            bodyGradient.addColorStop(0, 'rgb(' + this.lightColor.r + ',' + this.lightColor.g + ',' + this.lightColor.b + ')');
-            bodyGradient.addColorStop(0.7, 'rgb(' + this.bodyColor.r + ',' + this.bodyColor.g + ',' + this.bodyColor.b + ')');
-            bodyGradient.addColorStop(1, 'rgb(' + this.darkColor.r + ',' + this.darkColor.g + ',' + this.darkColor.b + ')');
-            
-            ctx.fillStyle = bodyGradient;
+            var headY = -s * 0.55 + breathOffset;
+            ctx.fillStyle = this.furColor;
             ctx.beginPath();
-            ctx.ellipse(0, bounce, s * 0.7, s * 0.45, 0, 0, Math.PI * 2);
+            ctx.ellipse(0, headY, s * 0.38, s * 0.32, 0, 0, Math.PI * 2);
             ctx.fill();
             
-            var headX = s * 0.55;
-            var headY = -s * 0.15 + bounce;
-            
-            var headGradient = ctx.createRadialGradient(headX, headY, 0, headX, headY, s * 0.5);
-            headGradient.addColorStop(0, 'rgb(' + this.lightColor.r + ',' + this.lightColor.g + ',' + this.lightColor.b + ')');
-            headGradient.addColorStop(0.6, 'rgb(' + this.bodyColor.r + ',' + this.bodyColor.g + ',' + this.bodyColor.b + ')');
-            headGradient.addColorStop(1, 'rgb(' + this.darkColor.r + ',' + this.darkColor.g + ',' + this.darkColor.b + ')');
-            
-            ctx.fillStyle = headGradient;
+            ctx.fillStyle = this.furColor;
             ctx.beginPath();
-            ctx.ellipse(headX, headY, s * 0.4, s * 0.35, 0, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = 'rgb(' + this.bodyColor.r + ',' + this.bodyColor.g + ',' + this.bodyColor.b + ')';
-            
-            ctx.beginPath();
-            ctx.moveTo(headX - s * 0.25, headY - s * 0.25);
-            ctx.lineTo(headX - s * 0.35, headY - s * 0.55 + Math.sin(this.earWiggle) * 2);
-            ctx.lineTo(headX - s * 0.08, headY - s * 0.3);
+            ctx.moveTo(-s * 0.28, headY - s * 0.18);
+            ctx.lineTo(-s * 0.38, headY - s * 0.52);
+            ctx.lineTo(-s * 0.12, headY - s * 0.25);
             ctx.closePath();
             ctx.fill();
             
             ctx.beginPath();
-            ctx.moveTo(headX + s * 0.25, headY - s * 0.25);
-            ctx.lineTo(headX + s * 0.35, headY - s * 0.55 + Math.sin(this.earWiggle + 0.5) * 2);
-            ctx.lineTo(headX + s * 0.08, headY - s * 0.3);
+            ctx.moveTo(s * 0.28, headY - s * 0.18);
+            ctx.lineTo(s * 0.38, headY - s * 0.52);
+            ctx.lineTo(s * 0.12, headY - s * 0.25);
             ctx.closePath();
             ctx.fill();
             
-            ctx.fillStyle = 'rgb(' + Math.max(0, this.bodyColor.r - 60) + ',' + Math.max(0, this.bodyColor.g - 50) + ',' + Math.max(0, this.bodyColor.b - 40) + ')';
+            ctx.fillStyle = this.furDark;
             ctx.beginPath();
-            ctx.moveTo(headX - s * 0.28, headY - s * 0.32);
-            ctx.lineTo(headX - s * 0.32, headY - s * 0.45);
-            ctx.lineTo(headX - s * 0.15, headY - s * 0.32);
+            ctx.moveTo(-s * 0.25, headY - s * 0.22);
+            ctx.lineTo(-s * 0.32, headY - s * 0.42);
+            ctx.lineTo(-s * 0.15, headY - s * 0.25);
             ctx.closePath();
             ctx.fill();
             
             ctx.beginPath();
-            ctx.moveTo(headX + s * 0.28, headY - s * 0.32);
-            ctx.lineTo(headX + s * 0.32, headY - s * 0.45);
-            ctx.lineTo(headX + s * 0.15, headY - s * 0.32);
+            ctx.moveTo(s * 0.25, headY - s * 0.22);
+            ctx.lineTo(s * 0.32, headY - s * 0.42);
+            ctx.lineTo(s * 0.15, headY - s * 0.25);
             ctx.closePath();
+            ctx.fill();
+            
+            ctx.fillStyle = this.furLight;
+            ctx.beginPath();
+            ctx.ellipse(0, headY + s * 0.08, s * 0.18, s * 0.12, 0, 0, Math.PI * 2);
             ctx.fill();
             
             var eyeY = headY - s * 0.05;
-            ctx.fillStyle = '#2d2d2d';
+            ctx.fillStyle = this.color === 'gold' ? '#c9a030' : '#7090a8';
             ctx.beginPath();
-            ctx.ellipse(headX - s * 0.12, eyeY, s * 0.08, s * 0.1, 0, 0, Math.PI * 2);
+            ctx.ellipse(-s * 0.12, eyeY, s * 0.08, s * 0.09, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.beginPath();
-            ctx.ellipse(headX + s * 0.12, eyeY, s * 0.08, s * 0.1, 0, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = this.color === 'gold' ? '#d4a520' : '#7ab8d4';
-            ctx.beginPath();
-            ctx.ellipse(headX - s * 0.12, eyeY, s * 0.06, s * 0.08, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(headX + s * 0.12, eyeY, s * 0.06, s * 0.08, 0, 0, Math.PI * 2);
+            ctx.ellipse(s * 0.12, eyeY, s * 0.08, s * 0.09, 0, 0, Math.PI * 2);
             ctx.fill();
             
             ctx.fillStyle = '#1a1a1a';
             ctx.beginPath();
-            ctx.ellipse(headX - s * 0.12, eyeY, s * 0.03, s * 0.05, 0, 0, Math.PI * 2);
+            ctx.ellipse(-s * 0.12, eyeY, s * 0.03, s * 0.06, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.beginPath();
-            ctx.ellipse(headX + s * 0.12, eyeY, s * 0.03, s * 0.05, 0, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-            ctx.beginPath();
-            ctx.arc(headX - s * 0.14, eyeY - s * 0.03, s * 0.02, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(headX + s * 0.1, eyeY - s * 0.03, s * 0.02, 0, Math.PI * 2);
+            ctx.ellipse(s * 0.12, eyeY, s * 0.03, s * 0.06, 0, 0, Math.PI * 2);
             ctx.fill();
             
-            ctx.fillStyle = '#e8b4b4';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
             ctx.beginPath();
-            ctx.ellipse(headX, headY + s * 0.1, s * 0.06, s * 0.04, 0, 0, Math.PI * 2);
+            ctx.arc(-s * 0.14, eyeY - s * 0.03, s * 0.02, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(s * 0.1, eyeY - s * 0.03, s * 0.02, 0, Math.PI * 2);
             ctx.fill();
             
-            ctx.strokeStyle = '#888';
-            ctx.lineWidth = 0.5;
+            ctx.fillStyle = '#dba0a0';
             ctx.beginPath();
-            ctx.moveTo(headX - s * 0.05, headY + s * 0.12);
-            ctx.lineTo(headX - s * 0.25, headY + s * 0.08);
-            ctx.moveTo(headX - s * 0.05, headY + s * 0.14);
-            ctx.lineTo(headX - s * 0.25, headY + s * 0.16);
-            ctx.moveTo(headX + s * 0.05, headY + s * 0.12);
-            ctx.lineTo(headX + s * 0.25, headY + s * 0.08);
-            ctx.moveTo(headX + s * 0.05, headY + s * 0.14);
-            ctx.lineTo(headX + s * 0.25, headY + s * 0.16);
-            ctx.stroke();
+            ctx.ellipse(0, headY + s * 0.08, s * 0.045, s * 0.03, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = this.furDark;
+            ctx.beginPath();
+            ctx.ellipse(-s * 0.25, s * 0.15, s * 0.12, s * 0.08, -0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(s * 0.25, s * 0.15, s * 0.12, s * 0.08, 0.3, 0, Math.PI * 2);
+            ctx.fill();
             
             ctx.restore();
         },
         
         update: function() {
-            this.tailPhase += 0.08;
-            this.earWiggle += 0.05;
-            
-            if (this.isJumping) {
-                this.jumpPhase += 0.12;
-                this.jumpHeight = Math.sin(this.jumpPhase) * (this.isPlayful ? 25 : 12);
-                if (this.jumpPhase >= Math.PI) {
-                    this.isJumping = false;
-                    this.jumpPhase = 0;
-                    this.jumpHeight = 0;
-                }
-            }
-            
-            if (this.isIdle) {
-                this.idleTime++;
-                if (this.idleTime > this.maxIdleTime) {
-                    this.isIdle = false;
-                    this.idleTime = 0;
-                    this.direction = random(0, 1) ? 1 : -1;
-                    if (this.isPlayful && random(0, 100) < 40) {
-                        this.isJumping = true;
-                    }
-                }
-            } else {
-                this.animPhase += this.animSpeed;
-                this.x += this.speed * this.direction;
-                
-                if (this.x > this.maxX) {
-                    this.x = this.maxX;
-                    this.direction = -1;
-                    if (this.isPlayful && random(0, 100) < 30) {
-                        this.isJumping = true;
-                    }
-                } else if (this.x < this.minX) {
-                    this.x = this.minX;
-                    this.direction = 1;
-                    if (this.isPlayful && random(0, 100) < 30) {
-                        this.isJumping = true;
-                    }
-                }
-                
-                if (this.isPlayful) {
-                    if (random(0, 100) < 0.5) {
-                        this.isIdle = true;
-                        this.maxIdleTime = random(40, 100);
-                    }
-                    if (random(0, 100) < 0.3 && !this.isJumping) {
-                        this.isJumping = true;
-                    }
-                } else {
-                    if (random(0, 100) < 0.8) {
-                        this.isIdle = true;
-                        this.maxIdleTime = random(150, 400);
-                    }
-                }
-            }
-            
+            this.tailPhase += this.tailSpeed;
+            this.breathPhase += this.breathSpeed;
             this.draw();
         }
     }
@@ -725,14 +618,14 @@
         },
 
         initCats: function() {
-            var groundY = this.height - 25;
+            var groundY = this.height - 30;
+            var treeX = 535;
             
-            this.cats.push(new Cat(this, 200, groundY, 'gold', false, 'Chill Gold'));
-            this.cats.push(new Cat(this, 350, groundY, 'gold', true, 'Playful Gold'));
-            
-            this.cats.push(new Cat(this, 500, groundY, 'silver', true, 'Silver 1'));
-            this.cats.push(new Cat(this, 650, groundY, 'silver', true, 'Silver 2'));
-            this.cats.push(new Cat(this, 800, groundY, 'silver', true, 'Silver 3'));
+            this.cats.push(new Cat(this, treeX - 180, groundY, 'gold'));
+            this.cats.push(new Cat(this, treeX - 90, groundY, 'silver'));
+            this.cats.push(new Cat(this, treeX, groundY, 'silver'));
+            this.cats.push(new Cat(this, treeX + 90, groundY, 'silver'));
+            this.cats.push(new Cat(this, treeX + 180, groundY, 'gold'));
         },
 
         toDataURL: function(type) {
