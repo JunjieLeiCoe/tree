@@ -1,10 +1,11 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Our Story</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story - Sakura Love Tree</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+    
     <link type="text/css" rel="stylesheet" href="./index_files/default.css">
     <script type="text/javascript" src="./index_files/jquery.min.js"></script>
     <script type="text/javascript" src="./index_files/jscex.min.js"></script>
@@ -16,66 +17,213 @@
     <script type="text/javascript" src="./index_files/functions.js" charset="utf-8"></script>
     <script type="text/javascript" src="./index_files/love.js" charset="utf-8"></script>
     <script type="text/javascript" src="./config.js"></script>
-    <style type="text/css">
-        <!--
-        .STYLE1 {
-            color: #666666
+    
+    <style>
+        .music-btn {
+            position: fixed;
+            z-index: 10001;
+            top: 15px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 10px rgba(255, 182, 193, 0.5));
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.3), rgba(255, 105, 180, 0.2));
+            border: 2px solid rgba(255, 182, 193, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        -->
+        
+        .music-btn:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 20px rgba(255, 182, 193, 0.8));
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.5), rgba(255, 105, 180, 0.4));
+        }
+        
+        .music-btn img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(1.2);
+        }
+        
+        .rotateImages {
+            animation: myRotate 4s linear infinite;
+        }
+        
+        @keyframes myRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .title-header {
+            text-align: center;
+            padding: 20px 0 10px;
+            font-size: 28px;
+            background: linear-gradient(90deg, #FFB6C1, #FF69B4, #FF1493, #FF69B4, #FFB6C1);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+            text-shadow: none;
+            filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.3));
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        
+        .sakura-particle {
+            position: fixed;
+            pointer-events: none;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(ellipse at center, #FFB6C1 0%, #FF69B4 50%, transparent 70%);
+            border-radius: 150% 0 150% 0;
+            opacity: 0.7;
+            animation: sakuraFall linear infinite;
+            z-index: 9999;
+        }
+        
+        @keyframes sakuraFall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg) translateX(0);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(25vh) rotate(90deg) translateX(20px);
+            }
+            50% {
+                transform: translateY(50vh) rotate(180deg) translateX(-20px);
+            }
+            75% {
+                transform: translateY(75vh) rotate(270deg) translateX(10px);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg) translateX(-10px);
+                opacity: 0;
+            }
+        }
+        
+        .sparkle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle 1.5s ease-in-out infinite;
+            z-index: 9998;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
-<img src="https://ajlovechina.github.io/loveBalloon/static/music.png" style="position: fixed;z-index: 10001;top:10px;right:10px;" onclick="let m = document.querySelector('.song-audio-autoplay'); if (m.paused ) {m.play(); this.className = 'rotateImages'} else {m.pause(); this.className = ''}">
-<audio class="song-audio-autoplay" controls loop style="display: none;visibility: hidden">
+<div class="music-btn" onclick="toggleMusic(this)">
+    <img src="https://ajlovechina.github.io/loveBalloon/static/music.png" alt="Music">
+</div>
+<audio class="song-audio-autoplay" controls loop style="display: none; visibility: hidden">
     <source src="./index_files/music.mp3" type="audio/mp3"/>
 </audio>
-<style type="text/css">
-    .rotateImages{
-        -webkit-animation:myRotate 10s linear infinite;
-        animation:myRotate 10s linear infinite;
-    }
-    @-webkit-keyframes myRotate{
-        0%{ -webkit-transform: rotate(0deg);}
-        50%{ -webkit-transform: rotate(180deg);}
-        100%{ -webkit-transform: rotate(360deg);}
-    }
-    @keyframes myRotate{
-        0%{ -webkit-transform: rotate(0deg);}
-        50%{ -webkit-transform: rotate(180deg);}
-        100%{ -webkit-transform: rotate(360deg);}
-    }
-</style>
 
 <div id="main">
-    <div id="error">本页面采用HTML5编辑，目前您的浏览器无法显示，请换成谷歌(<a
-            href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a>)或者火狐(<a
-            href="http://firefox.com.cn/download/">Firefox</a>)浏览器，或者其他游览器的最新版本。
+    <h1 class="title-header">🌸 Sakura Love Story 🌸</h1>
+    
+    <div id="error">
+        This page uses HTML5 Canvas. Please use a modern browser like 
+        <a href="https://www.google.com/chrome/">Chrome</a> or 
+        <a href="https://www.mozilla.org/firefox/">Firefox</a>.
     </div>
+    
     <div id="wrap">
         <div id="text">
-            <div id="code">
-            </div>
+            <div id="code"></div>
         </div>
         <div id="clock-box">
-                    <span id="clock-box-inside-text">
-					</span>
+            <span id="clock-box-inside-text"></span>
             <div id="clock"></div>
         </div>
         <canvas id="canvas" width="1100" height="680"></canvas>
     </div>
-
 </div>
 
-<script type="text/javascript">
-    $('#code').html(config.lines.map(item => {
-        return `<span class="say">${item}</span><br>
-						<span class="say"> </span><br>`
-    }).reduce((a, b) => {
+<script>
+function toggleMusic(btn) {
+    var m = document.querySelector('.song-audio-autoplay');
+    if (m.paused) {
+        m.play();
+        btn.classList.add('rotateImages');
+    } else {
+        m.pause();
+        btn.classList.remove('rotateImages');
+    }
+}
+
+function createSakuraParticles() {
+    var container = document.body;
+    
+    for (var i = 0; i < 15; i++) {
+        setTimeout(function() {
+            var petal = document.createElement('div');
+            petal.className = 'sakura-particle';
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = (Math.random() * 5 + 8) + 's';
+            petal.style.animationDelay = Math.random() * 5 + 's';
+            petal.style.width = (Math.random() * 10 + 8) + 'px';
+            petal.style.height = (Math.random() * 10 + 8) + 'px';
+            container.appendChild(petal);
+            
+            setTimeout(function() {
+                if (petal.parentNode) {
+                    petal.parentNode.removeChild(petal);
+                }
+            }, 15000);
+        }, i * 500);
+    }
+}
+
+function createSparkles() {
+    var container = document.body;
+    
+    for (var i = 0; i < 20; i++) {
+        var sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = Math.random() * 100 + 'vw';
+        sparkle.style.top = Math.random() * 100 + 'vh';
+        sparkle.style.animationDelay = Math.random() * 2 + 's';
+        sparkle.style.width = (Math.random() * 3 + 2) + 'px';
+        sparkle.style.height = sparkle.style.width;
+        container.appendChild(sparkle);
+    }
+}
+
+setInterval(createSakuraParticles, 8000);
+createSakuraParticles();
+createSparkles();
+</script>
+
+<script>
+    $('#code').html(config.lines.map(function(item) {
+        return '<span class="say">' + item + '</span><br><span class="say"> </span><br>';
+    }).reduce(function(a, b) {
         return a + b;
-    }))
-    $("#clock-box-inside-text").html(`${config.names[0]}<span class="STYLE1">与</span> ${config.names[1]}<span class="STYLE1">已经相恋了</span>`)
+    }));
+    
+    $("#clock-box-inside-text").html(
+        '<span style="color: #FF69B4; font-weight: bold;">' + config.names[0] + '</span>' +
+        '<span class="STYLE1"> & </span>' +
+        '<span style="color: #FF69B4; font-weight: bold;">' + config.names[1] + '</span>' +
+        '<span class="STYLE1"> have been in love for</span>'
+    );
 </script>
 
 <script>
@@ -96,7 +244,7 @@
         var opts = {
             seed: {
                 x: width / 2 - 20,
-                color: "rgb(190, 26, 37)",
+                color: "rgb(255, 105, 180)",
                 scale: 2
             },
             branch: [
@@ -190,9 +338,8 @@
             foot.draw();
             tree.snapshot("p2", 500, 0, 610, 680);
 
-            // 会有闪烁不得意这样做, (＞﹏＜)
             canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
-            canvas.css("background", "#ffe");
+            canvas.css("background", "rgba(26, 26, 46, 0.3)");
             $await(Jscex.Async.sleep(300));
             canvas.css("background", "none");
         }));
@@ -232,7 +379,6 @@
         runAsync().start();
     })();
 </script>
-
 
 </body>
 </html>
