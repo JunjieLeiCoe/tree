@@ -5,121 +5,85 @@
 }
 
 body {
-    background: linear-gradient(180deg, 
-        #fdf6f0 0%, 
-        #fce8e6 15%,
-        #f8e1de 30%,
-        #f5dcd8 45%,
-        #f2d6d0 60%,
-        #efd0c8 75%,
-        #f0d4cc 90%,
-        #e8c8be 100%
+    background: linear-gradient(160deg, 
+        #faf8f5 0%,
+        #f5f0eb 20%,
+        #f0e8e0 40%,
+        #ebe0d8 60%,
+        #e5d8ce 80%,
+        #e0d0c5 100%
     );
     min-height: 100vh;
-    font-size: 14px;
-    font-family: 'Georgia', 'Palatino Linotype', 'Book Antiqua', serif;
-    color: #5a4a4a;
+    font-family: 'Crimson Text', 'Palatino', 'Georgia', serif;
+    color: #4a4540;
     overflow-x: hidden;
-    overflow-y: auto;
-}
-
-a {
-    color: #c9929e;
-    font-size: 14px;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-a:hover {
-    color: #a87080;
 }
 
 #main {
     width: 100%;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 10px;
+    padding: 20px 0;
 }
 
 #wrap {
     position: relative;
     width: 1100px;
-    max-width: 98%;
+    max-width: 96%;
     height: 680px;
-    margin: 0 auto;
-    border-radius: 8px;
-    background: linear-gradient(180deg, 
-        rgba(255, 252, 250, 0.4) 0%,
-        rgba(255, 248, 245, 0.3) 50%,
-        rgba(252, 245, 240, 0.2) 100%
-    );
 }
 
 #text {
-    width: 380px;
-    height: 420px;
-    left: 55px;
-    top: 85px;
+    width: 360px;
+    height: 400px;
+    left: 50px;
+    top: 100px;
     position: absolute;
     z-index: 10;
 }
 
 #code {
     display: none;
-    font-size: 17px;
-    line-height: 1.9;
-    color: #6a5656;
-    letter-spacing: 0.3px;
+    font-size: 18px;
+    line-height: 2.2;
+    color: #5a524a;
+    letter-spacing: 0.5px;
+    font-weight: 400;
 }
 
 #clock-box {
     position: absolute;
-    left: 55px;
-    top: 545px;
-    font-size: 20px;
+    left: 50px;
+    top: 540px;
+    font-size: 18px;
     display: none;
-    color: #6a5656;
-    padding: 12px 20px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(200, 180, 175, 0.2);
-}
-
-#clock-box a {
-    font-size: 20px;
-    text-decoration: none;
+    color: #6a625a;
+    letter-spacing: 0.3px;
 }
 
 #clock {
-    margin-top: 8px;
+    margin-top: 12px;
 }
 
 #clock .digit {
-    font-size: 42px;
-    font-weight: 500;
-    color: #c9929e;
-    letter-spacing: 1px;
+    font-size: 38px;
+    font-weight: 400;
+    color: #8a6a5a;
+    letter-spacing: 2px;
 }
 
 #canvas {
     width: 1100px;
     height: 680px;
-    border-radius: 8px;
 }
 
 #error {
-    margin: 0 auto;
+    margin: 60px auto;
     text-align: center;
-    margin-top: 60px;
     display: none;
-    color: #a87080;
-    background: rgba(255, 255, 255, 0.5);
-    padding: 20px 30px;
-    border-radius: 8px;
+    color: #8a6a5a;
+    padding: 30px;
 }
 
 .hand {
@@ -127,52 +91,46 @@ a:hover {
 }
 
 .say {
-    margin-left: 3px;
     display: inline;
 }
 
-.space {
-    margin-right: 150px;
-}
-
 .STYLE1 {
-    color: #9a8585;
-    font-style: italic;
+    color: #9a8a80;
+    font-weight: 300;
 }
 
 .music-btn {
     position: fixed;
     z-index: 10001;
-    top: 12px;
-    right: 12px;
-    width: 44px;
-    height: 44px;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     cursor: pointer;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(200, 180, 175, 0.3);
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(180, 160, 150, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.8;
-}
-
-.music-btn:hover {
-    transform: scale(1.05);
-    opacity: 1;
-}
-
-.music-btn img {
-    width: 24px;
-    height: 24px;
+    transition: all 0.4s ease;
     opacity: 0.7;
 }
 
+.music-btn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.music-btn img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+}
+
 .rotateImages {
-    animation: rotate 6s linear infinite;
+    animation: rotate 8s linear infinite;
+    opacity: 1 !important;
 }
 
 @keyframes rotate {
@@ -182,75 +140,29 @@ a:hover {
 
 .title-header {
     text-align: center;
-    padding: 15px 0 8px;
-    font-size: 24px;
+    padding: 10px 0 20px;
+    font-size: 14px;
     font-weight: 400;
-    color: #c9929e;
-    letter-spacing: 2px;
-}
-
-.petal-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    overflow: hidden;
-}
-
-.floating-petal {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background: radial-gradient(ellipse at 30% 30%, 
-        rgba(255, 245, 240, 0.9) 0%,
-        rgba(255, 200, 200, 0.7) 40%,
-        rgba(248, 180, 185, 0.5) 100%
-    );
-    border-radius: 80% 0 80% 0;
-    opacity: 0;
-    animation: petalFall linear forwards;
-}
-
-@keyframes petalFall {
-    0% {
-        opacity: 0;
-        transform: translateY(-20px) rotate(0deg) scale(0.8);
-    }
-    10% {
-        opacity: 0.8;
-    }
-    90% {
-        opacity: 0.6;
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(100vh) rotate(360deg) scale(0.6);
-    }
+    color: #a09080;
+    letter-spacing: 8px;
+    text-transform: uppercase;
 }
 
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(248, 235, 230, 0.5);
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(200, 150, 155, 0.4);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(200, 150, 155, 0.6);
+    background: rgba(160, 140, 130, 0.3);
+    border-radius: 2px;
 }
 
 ::selection {
-    background: rgba(200, 150, 155, 0.3);
-    color: #5a4a4a;
+    background: rgba(180, 140, 130, 0.2);
 }
 
 @media (max-width: 1150px) {
@@ -266,23 +178,21 @@ a:hover {
     }
     
     #text {
-        width: 35%;
-        left: 5%;
-        top: 12%;
+        width: 32%;
+        left: 4%;
+        top: 14%;
     }
     
     #code {
-        font-size: 14px;
+        font-size: 15px;
     }
     
     #clock-box {
-        left: 5%;
-        top: auto;
-        bottom: 8%;
-        font-size: 16px;
+        left: 4%;
+        font-size: 15px;
     }
     
     #clock .digit {
-        font-size: 32px;
+        font-size: 28px;
     }
 }

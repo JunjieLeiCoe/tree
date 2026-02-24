@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Story</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <link type="text/css" rel="stylesheet" href="./index_files/default.css">
     <script type="text/javascript" src="./index_files/jquery.min.js"></script>
@@ -27,13 +28,11 @@
     <source src="./index_files/music.mp3" type="audio/mp3"/>
 </audio>
 
-<div class="petal-bg" id="petal-container"></div>
-
 <div id="main">
-    <h1 class="title-header">Sakura</h1>
+    <p class="title-header">Sakura</p>
     
     <div id="error">
-        This page requires HTML5 Canvas. Please use Chrome or Firefox.
+        This page requires HTML5 Canvas.
     </div>
     
     <div id="wrap">
@@ -59,41 +58,6 @@ function toggleMusic(btn) {
         btn.classList.remove('rotateImages');
     }
 }
-
-(function createPetals() {
-    var container = document.getElementById('petal-container');
-    var petalCount = 8;
-    
-    function addPetal() {
-        var petal = document.createElement('div');
-        petal.className = 'floating-petal';
-        petal.style.left = (Math.random() * 100) + 'vw';
-        petal.style.animationDuration = (Math.random() * 8 + 10) + 's';
-        petal.style.animationDelay = '0s';
-        
-        var size = Math.random() * 8 + 8;
-        petal.style.width = size + 'px';
-        petal.style.height = size + 'px';
-        
-        container.appendChild(petal);
-        
-        setTimeout(function() {
-            if (petal.parentNode) {
-                petal.parentNode.removeChild(petal);
-            }
-        }, 18000);
-    }
-    
-    for (var i = 0; i < petalCount; i++) {
-        setTimeout(addPetal, i * 800);
-    }
-    
-    setInterval(function() {
-        if (container.children.length < 12) {
-            addPetal();
-        }
-    }, 2500);
-})();
 </script>
 
 <script>
@@ -104,10 +68,10 @@ function toggleMusic(btn) {
     }));
     
     $("#clock-box-inside-text").html(
-        '<span style="color: #c9929e;">' + config.names[0] + '</span>' +
+        config.names[0] +
         '<span class="STYLE1"> & </span>' +
-        '<span style="color: #c9929e;">' + config.names[1] + '</span>' +
-        '<span class="STYLE1"> have been together for</span>'
+        config.names[1] +
+        '<span class="STYLE1">, together for</span>'
     );
 </script>
 
@@ -129,7 +93,7 @@ function toggleMusic(btn) {
         var opts = {
             seed: {
                 x: width / 2 - 20,
-                color: "rgb(200, 146, 158)",
+                color: "rgb(180, 130, 120)",
                 scale: 2
             },
             branch: [
@@ -151,14 +115,14 @@ function toggleMusic(btn) {
                 ]]
             ],
             bloom: {
-                num: 700,
+                num: 500,
                 width: 1080,
                 height: 650,
             },
             footer: {
                 width: 1200,
-                height: 5,
-                speed: 10,
+                height: 4,
+                speed: 8,
             }
         };
 
@@ -224,7 +188,7 @@ function toggleMusic(btn) {
             tree.snapshot("p2", 500, 0, 610, 680);
 
             canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
-            canvas.css("background", "rgba(253, 248, 245, 0.15)");
+            canvas.css("background", "rgba(250, 248, 245, 0.1)");
             $await(Jscex.Async.sleep(300));
             canvas.css("background", "none");
         }));
@@ -234,7 +198,7 @@ function toggleMusic(btn) {
                 tree.ctx.clearRect(0, 0, width, height);
                 tree.jump();
                 foot.draw();
-                $await(Jscex.Async.sleep(25));
+                $await(Jscex.Async.sleep(30));
             }
         }));
 
@@ -242,7 +206,7 @@ function toggleMusic(btn) {
             var together = new Date(config.date);
 
             $("#code").show().typewriter();
-            $("#clock-box").fadeIn(500);
+            $("#clock-box").fadeIn(800);
             while (true) {
                 timeElapse(together);
                 $await(Jscex.Async.sleep(1000));

@@ -21,12 +21,12 @@
     }
 
     var SAKURA_PINK = [
-        {r: 255, g: 183, b: 197, a: 0.9},
-        {r: 255, g: 192, b: 203, a: 0.85},
-        {r: 255, g: 209, b: 220, a: 0.9},
-        {r: 252, g: 182, b: 193, a: 0.88},
-        {r: 255, g: 175, b: 189, a: 0.9},
-        {r: 248, g: 200, b: 210, a: 0.85}
+        {r: 235, g: 180, b: 180, a: 0.75},
+        {r: 228, g: 175, b: 175, a: 0.7},
+        {r: 240, g: 195, b: 190, a: 0.75},
+        {r: 232, g: 185, b: 180, a: 0.72},
+        {r: 238, g: 190, b: 185, a: 0.75},
+        {r: 230, g: 188, b: 185, a: 0.7}
     ];
 
     Point = function(x, y) {
@@ -83,7 +83,7 @@
     Seed = function(tree, point, scale, color) {
         this.tree = tree;
         var scale = scale || 1;
-        var color = color || '#e8a4b8';
+        var color = color || '#c8a0a0';
 
         this.heart = {
             point  : point,
@@ -135,13 +135,11 @@
             ctx.translate(point.x, point.y);
             
             var gradient = ctx.createRadialGradient(0, -5 * scale, 0, 0, -5 * scale, 25 * scale);
-            gradient.addColorStop(0, '#ffccd5');
-            gradient.addColorStop(0.5, '#e8a4b8');
-            gradient.addColorStop(1, '#d4849b');
+            gradient.addColorStop(0, '#e0c0c0');
+            gradient.addColorStop(0.5, '#c8a0a0');
+            gradient.addColorStop(1, '#b08888');
             
             ctx.fillStyle = gradient;
-            ctx.shadowColor = 'rgba(232, 164, 184, 0.4)';
-            ctx.shadowBlur = 15;
             
             ctx.beginPath();
             ctx.moveTo(0, 0);
@@ -155,10 +153,9 @@
         },
         drawCirle: function() {
             var ctx = this.tree.ctx, cirle = this.cirle;
-            var point = cirle.point, color = cirle.color, 
-                scale = cirle.scale, radius = cirle.radius;
+            var point = cirle.point, scale = cirle.scale, radius = cirle.radius;
             ctx.save();
-            ctx.fillStyle = '#e8a4b8';
+            ctx.fillStyle = '#c8a0a0';
             ctx.translate(point.x, point.y);
             ctx.scale(scale, scale);
             ctx.beginPath();
@@ -172,8 +169,8 @@
             var point = heart.point, scale = heart.scale;
             
             ctx.save();
-            ctx.strokeStyle = '#c9929e';
-            ctx.fillStyle = '#c9929e';
+            ctx.strokeStyle = '#a08888';
+            ctx.fillStyle = '#a08888';
             ctx.lineWidth = 1;
             ctx.translate(point.x, point.y);
             ctx.scale(scale, scale);
@@ -182,9 +179,9 @@
             ctx.lineTo(55, 15);
             ctx.stroke();
 
-            ctx.scale(0.8, 0.8);
-            ctx.font = "13px Georgia, serif";
-            ctx.fillText("click here", 22, 14);
+            ctx.scale(0.75, 0.75);
+            ctx.font = "12px Georgia, serif";
+            ctx.fillText("click", 25, 13);
             ctx.restore();
         },
         clear: function() {
@@ -215,11 +212,11 @@
 
             ctx.save();
             var gradient = ctx.createLinearGradient(point.x - len, point.y, point.x + len, point.y);
-            gradient.addColorStop(0, 'rgba(92, 64, 51, 0)');
-            gradient.addColorStop(0.2, 'rgba(92, 64, 51, 0.8)');
-            gradient.addColorStop(0.5, 'rgba(74, 52, 42, 1)');
-            gradient.addColorStop(0.8, 'rgba(92, 64, 51, 0.8)');
-            gradient.addColorStop(1, 'rgba(92, 64, 51, 0)');
+            gradient.addColorStop(0, 'rgba(80, 60, 50, 0)');
+            gradient.addColorStop(0.15, 'rgba(80, 60, 50, 0.6)');
+            gradient.addColorStop(0.5, 'rgba(65, 50, 42, 0.85)');
+            gradient.addColorStop(0.85, 'rgba(80, 60, 50, 0.6)');
+            gradient.addColorStop(1, 'rgba(80, 60, 50, 0)');
             
             ctx.strokeStyle = gradient;
             ctx.lineWidth = this.height;
@@ -338,7 +335,7 @@
         
         var baseColor = SAKURA_PINK[random(0, SAKURA_PINK.length - 1)];
         this.petalColor = baseColor;
-        this.centerColor = {r: 255, g: 210, b: 140};
+        this.centerColor = {r: 220, g: 190, b: 150};
     }
     
     SakuraFlower.prototype = {
@@ -358,9 +355,9 @@
                 ctx.rotate((Math.PI * 2 / this.petalCount) * i);
                 
                 var gradient = ctx.createLinearGradient(0, 0, 0, -currentSize);
-                gradient.addColorStop(0, 'rgba(255, 245, 238, 0.9)');
-                gradient.addColorStop(0.4, 'rgba(' + this.petalColor.r + ',' + this.petalColor.g + ',' + this.petalColor.b + ', 0.85)');
-                gradient.addColorStop(1, 'rgba(' + (this.petalColor.r - 15) + ',' + (this.petalColor.g - 10) + ',' + (this.petalColor.b - 5) + ', 0.8)');
+                gradient.addColorStop(0, 'rgba(248, 242, 238, 0.85)');
+                gradient.addColorStop(0.4, 'rgba(' + this.petalColor.r + ',' + this.petalColor.g + ',' + this.petalColor.b + ', 0.75)');
+                gradient.addColorStop(1, 'rgba(' + (this.petalColor.r - 10) + ',' + (this.petalColor.g - 8) + ',' + (this.petalColor.b - 5) + ', 0.7)');
                 
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
@@ -380,11 +377,11 @@
                 ctx.restore();
             }
             
-            var centerSize = currentSize * 0.22;
+            var centerSize = currentSize * 0.2;
             var centerGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, centerSize);
-            centerGradient.addColorStop(0, 'rgba(255, 250, 230, 1)');
-            centerGradient.addColorStop(0.6, 'rgba(' + this.centerColor.r + ',' + this.centerColor.g + ',' + this.centerColor.b + ', 0.9)');
-            centerGradient.addColorStop(1, 'rgba(210, 160, 90, 0.8)');
+            centerGradient.addColorStop(0, 'rgba(248, 242, 230, 0.9)');
+            centerGradient.addColorStop(0.6, 'rgba(' + this.centerColor.r + ',' + this.centerColor.g + ',' + this.centerColor.b + ', 0.75)');
+            centerGradient.addColorStop(1, 'rgba(180, 150, 110, 0.65)');
             
             ctx.fillStyle = centerGradient;
             ctx.beginPath();
@@ -406,151 +403,6 @@
         }
     }
 
-    Cat = function(tree, x, y, color) {
-        this.tree = tree;
-        this.x = x;
-        this.y = y;
-        this.color = color;
-        this.size = 22;
-        this.tailPhase = randomFloat(0, Math.PI * 2);
-        this.tailSpeed = randomFloat(0.02, 0.04);
-        this.breathPhase = randomFloat(0, Math.PI * 2);
-        this.breathSpeed = randomFloat(0.03, 0.05);
-        
-        if (color === 'gold') {
-            this.furColor = '#d4a55a';
-            this.furLight = '#e8c88a';
-            this.furDark = '#a07840';
-        } else {
-            this.furColor = '#9ea5b0';
-            this.furLight = '#c5ccd5';
-            this.furDark = '#6a7078';
-        }
-    }
-    
-    Cat.prototype = {
-        draw: function() {
-            var ctx = this.tree.ctx;
-            var s = this.size;
-            var breathOffset = Math.sin(this.breathPhase) * 0.5;
-            
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            
-            var tailCurve = Math.sin(this.tailPhase) * 0.3;
-            ctx.fillStyle = this.furColor;
-            ctx.beginPath();
-            ctx.moveTo(-s * 0.4, -s * 0.2);
-            ctx.quadraticCurveTo(
-                -s * 0.7 + tailCurve * 10, -s * 0.8,
-                -s * 0.5 + tailCurve * 15, -s * 1.2
-            );
-            ctx.quadraticCurveTo(
-                -s * 0.4 + tailCurve * 12, -s * 1.1,
-                -s * 0.35, -s * 0.2
-            );
-            ctx.closePath();
-            ctx.fill();
-            
-            ctx.fillStyle = this.furColor;
-            ctx.beginPath();
-            ctx.ellipse(0, 0, s * 0.45, s * 0.35 + breathOffset, 0, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = this.furLight;
-            ctx.beginPath();
-            ctx.ellipse(s * 0.1, s * 0.1, s * 0.2, s * 0.15, 0.3, 0, Math.PI * 2);
-            ctx.fill();
-            
-            var headY = -s * 0.55 + breathOffset;
-            ctx.fillStyle = this.furColor;
-            ctx.beginPath();
-            ctx.ellipse(0, headY, s * 0.38, s * 0.32, 0, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = this.furColor;
-            ctx.beginPath();
-            ctx.moveTo(-s * 0.28, headY - s * 0.18);
-            ctx.lineTo(-s * 0.38, headY - s * 0.52);
-            ctx.lineTo(-s * 0.12, headY - s * 0.25);
-            ctx.closePath();
-            ctx.fill();
-            
-            ctx.beginPath();
-            ctx.moveTo(s * 0.28, headY - s * 0.18);
-            ctx.lineTo(s * 0.38, headY - s * 0.52);
-            ctx.lineTo(s * 0.12, headY - s * 0.25);
-            ctx.closePath();
-            ctx.fill();
-            
-            ctx.fillStyle = this.furDark;
-            ctx.beginPath();
-            ctx.moveTo(-s * 0.25, headY - s * 0.22);
-            ctx.lineTo(-s * 0.32, headY - s * 0.42);
-            ctx.lineTo(-s * 0.15, headY - s * 0.25);
-            ctx.closePath();
-            ctx.fill();
-            
-            ctx.beginPath();
-            ctx.moveTo(s * 0.25, headY - s * 0.22);
-            ctx.lineTo(s * 0.32, headY - s * 0.42);
-            ctx.lineTo(s * 0.15, headY - s * 0.25);
-            ctx.closePath();
-            ctx.fill();
-            
-            ctx.fillStyle = this.furLight;
-            ctx.beginPath();
-            ctx.ellipse(0, headY + s * 0.08, s * 0.18, s * 0.12, 0, 0, Math.PI * 2);
-            ctx.fill();
-            
-            var eyeY = headY - s * 0.05;
-            ctx.fillStyle = this.color === 'gold' ? '#c9a030' : '#7090a8';
-            ctx.beginPath();
-            ctx.ellipse(-s * 0.12, eyeY, s * 0.08, s * 0.09, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(s * 0.12, eyeY, s * 0.08, s * 0.09, 0, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = '#1a1a1a';
-            ctx.beginPath();
-            ctx.ellipse(-s * 0.12, eyeY, s * 0.03, s * 0.06, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(s * 0.12, eyeY, s * 0.03, s * 0.06, 0, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-            ctx.beginPath();
-            ctx.arc(-s * 0.14, eyeY - s * 0.03, s * 0.02, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(s * 0.1, eyeY - s * 0.03, s * 0.02, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = '#dba0a0';
-            ctx.beginPath();
-            ctx.ellipse(0, headY + s * 0.08, s * 0.045, s * 0.03, 0, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = this.furDark;
-            ctx.beginPath();
-            ctx.ellipse(-s * 0.25, s * 0.15, s * 0.12, s * 0.08, -0.3, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(s * 0.25, s * 0.15, s * 0.12, s * 0.08, 0.3, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.restore();
-        },
-        
-        update: function() {
-            this.tailPhase += this.tailSpeed;
-            this.breathPhase += this.breathSpeed;
-            this.draw();
-        }
-    }
-
     Tree = function(canvas, width, height, opt) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
@@ -560,7 +412,6 @@
         this.record = {};
         this.petals = [];
         this.flowers = [];
-        this.cats = [];
         this.wind = 0;
         this.windTarget = 0;
         this.windPhase = 0;
@@ -569,7 +420,6 @@
         this.initFooter();
         this.initBranch();
         this.initBloom();
-        this.initCats();
     }
     
     Tree.prototype = {
@@ -617,16 +467,6 @@
             this.bloomsCache = cache;
         },
 
-        initCats: function() {
-            var groundY = this.height - 30;
-            var treeX = 535;
-            
-            this.cats.push(new Cat(this, treeX - 180, groundY, 'gold'));
-            this.cats.push(new Cat(this, treeX - 90, groundY, 'silver'));
-            this.cats.push(new Cat(this, treeX, groundY, 'silver'));
-            this.cats.push(new Cat(this, treeX + 90, groundY, 'silver'));
-            this.cats.push(new Cat(this, treeX + 180, groundY, 'gold'));
-        },
 
         toDataURL: function(type) {
             return this.canvas.toDataURL(type);
@@ -786,10 +626,6 @@
                 this.blooms[i].jump();
             }
             
-            for (var i = 0; i < this.cats.length; i++) {
-                this.cats[i].update();
-            }
-            
             if ((this.blooms.length && this.blooms.length < 3) || !this.blooms.length) {
                 var bloom = this.opt.bloom || {};
                 var width = bloom.width || this.width;
@@ -863,9 +699,9 @@
             ctx.beginPath();
             
             var gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, this.radius * 1.2);
-            gradient.addColorStop(0, 'rgb(82, 56, 45)');
-            gradient.addColorStop(0.6, 'rgb(62, 42, 32)');
-            gradient.addColorStop(1, 'rgb(52, 35, 28)');
+            gradient.addColorStop(0, 'rgb(75, 58, 50)');
+            gradient.addColorStop(0.6, 'rgb(58, 45, 38)');
+            gradient.addColorStop(1, 'rgb(48, 38, 32)');
             
             ctx.fillStyle = gradient;
             ctx.arc(p.x, p.y, this.radius, 0, 2 * Math.PI);
@@ -907,9 +743,9 @@
             ctx.globalAlpha = this.alpha;
             
             var gradient = ctx.createRadialGradient(0, -5, 0, 0, -5, 18);
-            gradient.addColorStop(0, 'rgba(255, 250, 245, 0.95)');
-            gradient.addColorStop(0.4, 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ', 0.85)');
-            gradient.addColorStop(1, 'rgba(' + (this.color.r - 20) + ',' + (this.color.g - 20) + ',' + (this.color.b - 15) + ', 0.75)');
+            gradient.addColorStop(0, 'rgba(248, 242, 238, 0.85)');
+            gradient.addColorStop(0.4, 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ', 0.7)');
+            gradient.addColorStop(1, 'rgba(' + (this.color.r - 15) + ',' + (this.color.g - 15) + ',' + (this.color.b - 10) + ', 0.6)');
             
             ctx.fillStyle = gradient;
             
@@ -922,10 +758,10 @@
             ctx.closePath();
             ctx.fill();
             
-            ctx.globalAlpha = 0.5;
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.globalAlpha = 0.35;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
             ctx.beginPath();
-            ctx.ellipse(-4, -6, 3, 2.5, -0.3, 0, Math.PI * 2);
+            ctx.ellipse(-4, -6, 2.5, 2, -0.3, 0, Math.PI * 2);
             ctx.fill();
             
             ctx.restore();
