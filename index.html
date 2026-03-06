@@ -1,13 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Story</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
+
+    <!-- Prevent flash of wrong theme -->
+    <script>
+    (function(){
+        var t = localStorage.getItem('theme');
+        if (t) document.documentElement.setAttribute('data-theme', t);
+        else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+            document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
     <link type="text/css" rel="stylesheet" href="./index_files/default.css">
+
+    <!-- Libraries -->
     <script type="text/javascript" src="./index_files/jquery.min.js"></script>
     <script type="text/javascript" src="./index_files/jscex.min.js"></script>
     <script type="text/javascript" src="./index_files/jscex-parser.js"></script>
@@ -21,60 +38,208 @@
 </head>
 <body>
 
-<div class="music-btn" onclick="toggleMusic(this)">
-    <img src="https://ajlovechina.github.io/loveBalloon/static/music.png" alt="Music">
-</div>
-<audio class="song-audio-autoplay" loop style="display: none;">
+<!-- Navigation -->
+<nav class="nav">
+    <span class="nav-brand">Our Story</span>
+    <div class="nav-actions">
+        <button class="btn-icon" id="music-toggle" aria-label="Toggle music" title="Toggle music">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18V5l12-2v13"/>
+                <circle cx="6" cy="18" r="3"/>
+                <circle cx="18" cy="16" r="3"/>
+            </svg>
+        </button>
+        <button class="btn-icon" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
+    </div>
+</nav>
+
+<!-- Audio -->
+<audio id="audio" loop>
     <source src="./index_files/music.mp3" type="audio/mp3"/>
 </audio>
 
-<div id="main">
-    <p class="title-header">Sakura</p>
-    
-    <div id="error">
-        This page requires HTML5 Canvas.
-    </div>
-    
-    <div id="wrap">
-        <div id="text">
-            <div id="code"></div>
-        </div>
-        <div id="clock-box">
-            <span id="clock-box-inside-text"></span>
-            <div id="clock"></div>
-        </div>
-        <canvas id="canvas" width="1100" height="680"></canvas>
-    </div>
-</div>
+<!-- Main Content -->
+<main>
 
+    <!-- Tree Section -->
+    <section class="section section--tree">
+        <div class="container">
+            <p class="section-label">Sakura</p>
+
+            <div id="error">This page requires HTML5 Canvas.</div>
+
+            <div id="wrap">
+                <div id="text">
+                    <div id="code"></div>
+                </div>
+                <div id="clock-box">
+                    <span id="clock-box-inside-text"></span>
+                    <div id="clock">
+                        <div class="clock-unit">
+                            <span class="clock-value" id="clock-days">0</span>
+                            <span class="clock-label">days</span>
+                        </div>
+                        <span class="clock-separator">:</span>
+                        <div class="clock-unit">
+                            <span class="clock-value" id="clock-hours">00</span>
+                            <span class="clock-label">hours</span>
+                        </div>
+                        <span class="clock-separator">:</span>
+                        <div class="clock-unit">
+                            <span class="clock-value" id="clock-minutes">00</span>
+                            <span class="clock-label">minutes</span>
+                        </div>
+                        <span class="clock-separator">:</span>
+                        <div class="clock-unit">
+                            <span class="clock-value" id="clock-seconds">00</span>
+                            <span class="clock-label">seconds</span>
+                        </div>
+                    </div>
+                </div>
+                <canvas id="canvas" width="1100" height="680"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Gallery Section -->
+    <section class="section section--gallery">
+        <div class="container">
+            <h2 class="section-title">Our Moments</h2>
+            <p class="section-description">A collection of memories we've shared together</p>
+            <div class="gallery-grid" id="gallery-grid"></div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="container">
+        <p>Made with love</p>
+    </div>
+</footer>
+
+<!-- Theme Toggle -->
 <script>
-function toggleMusic(btn) {
-    var m = document.querySelector('.song-audio-autoplay');
-    if (m.paused) {
-        m.play();
-        btn.classList.add('rotateImages');
-    } else {
-        m.pause();
-        btn.classList.remove('rotateImages');
-    }
-}
+(function() {
+    var html = document.documentElement;
+    var toggle = document.getElementById('theme-toggle');
+
+    toggle.addEventListener('click', function() {
+        var current = html.getAttribute('data-theme');
+        var next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+    });
+})();
 </script>
 
+<!-- Music Toggle -->
+<script>
+(function() {
+    var btn = document.getElementById('music-toggle');
+    var audio = document.getElementById('audio');
+
+    btn.addEventListener('click', function() {
+        if (audio.paused) {
+            audio.play();
+            btn.classList.add('active', 'playing');
+        } else {
+            audio.pause();
+            btn.classList.remove('active', 'playing');
+        }
+    });
+})();
+</script>
+
+<!-- Gallery Renderer -->
+<script>
+(function() {
+    var grid = document.getElementById('gallery-grid');
+    var photos = config.photos || [];
+
+    if (photos.length > 0) {
+        photos.forEach(function(photo) {
+            var item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.innerHTML =
+                '<img src="' + photo.src + '" alt="' + (photo.caption || '') + '" loading="lazy">' +
+                (photo.caption ? '<div class="gallery-item-caption"><p>' + photo.caption + '</p></div>' : '');
+            grid.appendChild(item);
+        });
+    } else {
+        for (var i = 0; i < 6; i++) {
+            var item = document.createElement('div');
+            item.className = 'gallery-item gallery-item--placeholder';
+            item.innerHTML =
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+                '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>' +
+                '<circle cx="8.5" cy="8.5" r="1.5"/>' +
+                '<polyline points="21 15 16 10 5 21"/>' +
+                '</svg>' +
+                '<span>Add photo</span>';
+            grid.appendChild(item);
+        }
+    }
+
+    // Scroll-triggered fade-in
+    if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.gallery-item').forEach(function(item) {
+            observer.observe(item);
+        });
+    } else {
+        // Fallback: show all items immediately
+        document.querySelectorAll('.gallery-item').forEach(function(item) {
+            item.classList.add('visible');
+        });
+    }
+})();
+</script>
+
+<!-- Love Letter Setup -->
 <script>
     $('#code').html(config.lines.map(function(item) {
         return '<span class="say">' + item + '</span><br><span class="say"> </span><br>';
     }).reduce(function(a, b) {
         return a + b;
     }));
-    
+
     $("#clock-box-inside-text").html(
-        config.names[0] +
-        '<span class="STYLE1"> & </span>' +
-        config.names[1] +
-        '<span class="STYLE1">, together for</span>'
+        '<span class="name-highlight">' + config.names[0] + '</span>' +
+        '<span class="text-muted"> & </span>' +
+        '<span class="name-highlight">' + config.names[1] + '</span>' +
+        '<span class="text-muted">, together for</span>'
     );
 </script>
 
+<!-- Canvas Animation (unchanged logic) -->
 <script>
     (function () {
         var canvas = $('#canvas');
@@ -187,10 +352,10 @@ function toggleMusic(btn) {
             foot.draw();
             tree.snapshot("p2", 500, 0, 610, 680);
 
-            canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
-            canvas.css("background", "rgba(250, 248, 245, 0.1)");
+            canvas.parent().css("background-image", "url(" + tree.toDataURL('image/png') + ")");
+            canvas.css("background-color", "var(--canvas-overlay)");
             $await(Jscex.Async.sleep(300));
-            canvas.css("background", "none");
+            canvas.css("background-color", "transparent");
         }));
 
         var jumpAnimate = eval(Jscex.compile("async", function () {
