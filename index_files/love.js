@@ -8,27 +8,35 @@
         return min + Math.random() * (max - min);
     }
 
-    function bezier(cp, t) {  
+    function bezier(cp, t) {
         var p1 = cp[0].mul((1 - t) * (1 - t));
         var p2 = cp[1].mul(2 * t * (1 - t));
-        var p3 = cp[2].mul(t * t); 
+        var p3 = cp[2].mul(t * t);
         return p1.add(p2).add(p3);
-    }  
+    }
 
     function inheart(x, y, r) {
         var z = ((x / r) * (x / r) + (y / r) * (y / r) - 1) * ((x / r) * (x / r) + (y / r) * (y / r) - 1) * ((x / r) * (x / r) + (y / r) * (y / r) - 1) - (x / r) * (x / r) * (y / r) * (y / r) * (y / r);
         return z < 0;
     }
 
+    // ============================================================
+    // Vibrant sakura palette
+    // ============================================================
     var SAKURA_PINK = [
-        {r: 235, g: 180, b: 180, a: 0.75},
-        {r: 228, g: 175, b: 175, a: 0.7},
-        {r: 240, g: 195, b: 190, a: 0.75},
-        {r: 232, g: 185, b: 180, a: 0.72},
-        {r: 238, g: 190, b: 185, a: 0.75},
-        {r: 230, g: 188, b: 185, a: 0.7}
+        {r: 255, g: 183, b: 197, a: 0.85},
+        {r: 255, g: 200, b: 212, a: 0.82},
+        {r: 252, g: 170, b: 192, a: 0.78},
+        {r: 255, g: 218, b: 225, a: 0.90},
+        {r: 248, g: 160, b: 185, a: 0.72},
+        {r: 255, g: 192, b: 205, a: 0.85},
+        {r: 255, g: 230, b: 236, a: 0.92},
+        {r: 245, g: 148, b: 178, a: 0.75}
     ];
 
+    // ============================================================
+    // Point
+    // ============================================================
     Point = function(x, y) {
         this.x = x || 0;
         this.y = y || 0;
@@ -63,6 +71,9 @@
         }
     }
 
+    // ============================================================
+    // Heart
+    // ============================================================
     Heart = function() {
         var points = [], x, y, t;
         for (var i = 10; i < 30; i += 0.2) {
@@ -80,6 +91,9 @@
         }
     }
 
+    // ============================================================
+    // Seed (unchanged)
+    // ============================================================
     Seed = function(tree, point, scale, color) {
         this.tree = tree;
         var scale = scale || 1;
@@ -108,7 +122,7 @@
             this.cirle.point = this.cirle.point.add(new Point(x, y));
         },
         canMove: function() {
-            return this.cirle.point.y < (this.tree.height + 20); 
+            return this.cirle.point.y < (this.tree.height + 20);
         },
         move: function(x, y) {
             this.clear();
@@ -130,17 +144,17 @@
         drawHeart: function() {
             var ctx = this.tree.ctx, heart = this.heart;
             var point = heart.point, scale = heart.scale;
-            
+
             ctx.save();
             ctx.translate(point.x, point.y);
-            
+
             var gradient = ctx.createRadialGradient(0, -5 * scale, 0, 0, -5 * scale, 25 * scale);
             gradient.addColorStop(0, '#e0c0c0');
             gradient.addColorStop(0.5, '#c8a0a0');
             gradient.addColorStop(1, '#b08888');
-            
+
             ctx.fillStyle = gradient;
-            
+
             ctx.beginPath();
             ctx.moveTo(0, 0);
             for (var i = 0; i < heart.figure.length; i++) {
@@ -167,7 +181,7 @@
         drawText: function() {
             var ctx = this.tree.ctx, heart = this.heart;
             var point = heart.point, scale = heart.scale;
-            
+
             ctx.save();
             ctx.strokeStyle = '#a08888';
             ctx.fillStyle = '#a08888';
@@ -197,6 +211,9 @@
         }
     }
 
+    // ============================================================
+    // Footer (unchanged)
+    // ============================================================
     Footer = function(tree, width, height, speed) {
         this.tree = tree;
         this.point = new Point(tree.seed.heart.point.x, tree.height - height / 2);
@@ -217,7 +234,7 @@
             gradient.addColorStop(0.5, 'rgba(65, 50, 42, 0.85)');
             gradient.addColorStop(0.85, 'rgba(80, 60, 50, 0.6)');
             gradient.addColorStop(1, 'rgba(80, 60, 50, 0)');
-            
+
             ctx.strokeStyle = gradient;
             ctx.lineWidth = this.height;
             ctx.lineCap = 'round';
@@ -234,175 +251,141 @@
         }
     }
 
+    // ============================================================
+    // BokehParticle - soft floating light orbs for dreamy feel
+    // ============================================================
+    BokehParticle = function(tree) {
+        this.tree = tree;
+        this.reset(true);
+    }
+    BokehParticle.prototype = {
+        reset: function(initial) {
+            this.x = randomFloat(0, this.tree.width);
+            this.y = initial ? randomFloat(0, this.tree.height) : this.tree.height + randomFloat(10, 40);
+            this.size = randomFloat(2, 8);
+            this.alpha = randomFloat(0.025, 0.09);
+            this.speedX = randomFloat(-0.12, 0.12);
+            this.speedY = randomFloat(-0.25, -0.05);
+            this.pulse = randomFloat(0, Math.PI * 2);
+            this.pulseSpeed = randomFloat(0.008, 0.025);
+        },
+        update: function() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.pulse += this.pulseSpeed;
+
+            if (this.y < -20 || this.x < -20 || this.x > this.tree.width + 20) {
+                this.reset(false);
+            }
+
+            var a = this.alpha * (0.4 + 0.6 * Math.sin(this.pulse));
+            if (a < 0.005) return;
+
+            var ctx = this.tree.ctx;
+            ctx.save();
+            ctx.globalAlpha = a;
+            var g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+            g.addColorStop(0, 'rgba(255, 240, 248, 0.9)');
+            g.addColorStop(0.4, 'rgba(255, 205, 220, 0.4)');
+            g.addColorStop(1, 'rgba(255, 185, 205, 0)');
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    // ============================================================
+    // SakuraPetal - larger, slower, dreamier
+    // ============================================================
     SakuraPetal = function(tree, x, y) {
         this.tree = tree;
         this.x = x;
         this.y = y;
-        
+
         var colorData = SAKURA_PINK[random(0, SAKURA_PINK.length - 1)];
         this.color = colorData;
-        
-        this.size = randomFloat(4, 9);
+
+        this.size = randomFloat(5, 13);
         this.rotation = randomFloat(0, Math.PI * 2);
-        this.rotationSpeed = randomFloat(-0.03, 0.03);
+        this.rotationSpeed = randomFloat(-0.025, 0.025);
         this.rotation3D = {
             x: randomFloat(0, Math.PI * 2),
             y: randomFloat(0, Math.PI * 2),
-            speedX: randomFloat(-0.02, 0.02),
-            speedY: randomFloat(-0.02, 0.02)
+            speedX: randomFloat(-0.018, 0.018),
+            speedY: randomFloat(-0.018, 0.018)
         };
-        
-        this.speedY = randomFloat(0.4, 1.2);
-        this.speedX = randomFloat(-0.3, 0.3);
+
+        this.speedY = randomFloat(0.25, 0.9);
+        this.speedX = randomFloat(-0.25, 0.25);
         this.swayPhase = randomFloat(0, Math.PI * 2);
-        this.swaySpeed = randomFloat(0.015, 0.035);
-        this.swayAmount = randomFloat(0.3, 0.8);
-        
+        this.swaySpeed = randomFloat(0.01, 0.028);
+        this.swayAmount = randomFloat(0.4, 1.0);
+
         this.alpha = colorData.a;
         this.fadeStart = tree.height * randomFloat(0.7, 0.9);
     }
-    
+
     SakuraPetal.prototype = {
         draw: function() {
             var ctx = this.tree.ctx;
             var scaleX = Math.cos(this.rotation3D.x) * 0.5 + 0.5;
             var scaleY = Math.cos(this.rotation3D.y) * 0.3 + 0.7;
-            
+
             ctx.save();
             ctx.globalAlpha = this.alpha;
             ctx.translate(this.x, this.y);
             ctx.rotate(this.rotation);
             ctx.scale(scaleX, scaleY);
-            
-            var gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size * 1.2);
-            gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
-            gradient.addColorStop(0.3, 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ', 0.85)');
-            gradient.addColorStop(1, 'rgba(' + (this.color.r - 20) + ',' + (this.color.g - 15) + ',' + (this.color.b - 10) + ', 0.7)');
-            
+
+            var s = this.size;
+            var gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, s * 1.2);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+            gradient.addColorStop(0.25, 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ', 0.9)');
+            gradient.addColorStop(1, 'rgba(' + (this.color.r - 15) + ',' + (this.color.g - 12) + ',' + (this.color.b - 8) + ', 0.6)');
+
             ctx.fillStyle = gradient;
-            
+
+            // Sakura petal shape with notch
             ctx.beginPath();
-            ctx.moveTo(0, -this.size * 0.3);
-            ctx.bezierCurveTo(
-                this.size * 0.8, -this.size * 0.8,
-                this.size * 1.1, this.size * 0.2,
-                0, this.size * 0.7
-            );
-            ctx.bezierCurveTo(
-                -this.size * 1.1, this.size * 0.2,
-                -this.size * 0.8, -this.size * 0.8,
-                0, -this.size * 0.3
-            );
+            ctx.moveTo(0, -s * 0.3);
+            ctx.bezierCurveTo(s * 0.9, -s * 0.85, s * 1.1, s * 0.15, s * 0.08, s * 0.65);
+            ctx.lineTo(0, s * 0.5);
+            ctx.lineTo(-s * 0.08, s * 0.65);
+            ctx.bezierCurveTo(-s * 1.1, s * 0.15, -s * 0.9, -s * 0.85, 0, -s * 0.3);
             ctx.closePath();
             ctx.fill();
-            
+
             ctx.restore();
         },
-        
+
         update: function(wind) {
             this.swayPhase += this.swaySpeed;
             this.x += this.speedX + Math.sin(this.swayPhase) * this.swayAmount + wind * 0.5;
             this.y += this.speedY;
-            
+
             this.rotation += this.rotationSpeed;
             this.rotation3D.x += this.rotation3D.speedX;
             this.rotation3D.y += this.rotation3D.speedY;
-            
+
             if (this.y > this.fadeStart) {
                 this.alpha -= 0.008;
             }
-            
-            if (this.y > this.tree.height + 20 || this.alpha <= 0 || 
+
+            if (this.y > this.tree.height + 20 || this.alpha <= 0 ||
                 this.x < -50 || this.x > this.tree.width + 50) {
                 return false;
             }
-            
+
             this.draw();
             return true;
         }
     }
 
-    SakuraFlower = function(tree, x, y, size) {
-        this.tree = tree;
-        this.x = x;
-        this.y = y;
-        this.size = size || randomFloat(6, 12);
-        this.rotation = randomFloat(0, Math.PI * 2);
-        this.alpha = 0;
-        this.targetAlpha = randomFloat(0.75, 0.95);
-        this.petalCount = 5;
-        this.growthPhase = 0;
-        
-        var baseColor = SAKURA_PINK[random(0, SAKURA_PINK.length - 1)];
-        this.petalColor = baseColor;
-        this.centerColor = {r: 220, g: 190, b: 150};
-    }
-    
-    SakuraFlower.prototype = {
-        draw: function() {
-            var ctx = this.tree.ctx;
-            var currentSize = this.size * Math.min(1, this.growthPhase);
-            
-            if (currentSize < 0.5) return;
-            
-            ctx.save();
-            ctx.globalAlpha = this.alpha;
-            ctx.translate(this.x, this.y);
-            ctx.rotate(this.rotation);
-            
-            for (var i = 0; i < this.petalCount; i++) {
-                ctx.save();
-                ctx.rotate((Math.PI * 2 / this.petalCount) * i);
-                
-                var gradient = ctx.createLinearGradient(0, 0, 0, -currentSize);
-                gradient.addColorStop(0, 'rgba(248, 242, 238, 0.85)');
-                gradient.addColorStop(0.4, 'rgba(' + this.petalColor.r + ',' + this.petalColor.g + ',' + this.petalColor.b + ', 0.75)');
-                gradient.addColorStop(1, 'rgba(' + (this.petalColor.r - 10) + ',' + (this.petalColor.g - 8) + ',' + (this.petalColor.b - 5) + ', 0.7)');
-                
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-                ctx.bezierCurveTo(
-                    -currentSize * 0.35, -currentSize * 0.3,
-                    -currentSize * 0.4, -currentSize * 0.85,
-                    0, -currentSize
-                );
-                ctx.bezierCurveTo(
-                    currentSize * 0.4, -currentSize * 0.85,
-                    currentSize * 0.35, -currentSize * 0.3,
-                    0, 0
-                );
-                ctx.closePath();
-                ctx.fill();
-                ctx.restore();
-            }
-            
-            var centerSize = currentSize * 0.2;
-            var centerGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, centerSize);
-            centerGradient.addColorStop(0, 'rgba(248, 242, 230, 0.9)');
-            centerGradient.addColorStop(0.6, 'rgba(' + this.centerColor.r + ',' + this.centerColor.g + ',' + this.centerColor.b + ', 0.75)');
-            centerGradient.addColorStop(1, 'rgba(180, 150, 110, 0.65)');
-            
-            ctx.fillStyle = centerGradient;
-            ctx.beginPath();
-            ctx.arc(0, 0, centerSize, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.restore();
-        },
-        
-        grow: function() {
-            if (this.growthPhase < 1) {
-                this.growthPhase += 0.04;
-            }
-            if (this.alpha < this.targetAlpha) {
-                this.alpha += 0.03;
-            }
-            this.draw();
-            return this.growthPhase >= 1;
-        }
-    }
-
+    // ============================================================
+    // Tree
+    // ============================================================
     Tree = function(canvas, width, height, opt) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
@@ -415,13 +398,19 @@
         this.wind = 0;
         this.windTarget = 0;
         this.windPhase = 0;
-        
+
+        // Dreamy bokeh particles
+        this.bokeh = [];
+        for (var i = 0; i < 28; i++) {
+            this.bokeh.push(new BokehParticle(this));
+        }
+
         this.initSeed();
         this.initFooter();
         this.initBranch();
         this.initBloom();
     }
-    
+
     Tree.prototype = {
         initSeed: function() {
             var seed = this.opt.seed || {};
@@ -453,12 +442,12 @@
                 width = bloom.width || this.width,
                 height = bloom.height || this.height,
                 figure = this.seed.heart.figure;
-            
+
             var together = new Date(config.date);
             var now = new Date();
             var days = Math.floor((now.getTime() - together.getTime()) / (24 * 60 * 60 * 1000));
             var numHearts = Math.max(1, days);
-            
+
             var r = 240;
             for (var i = 0; i < numHearts; i++) {
                 cache.push(this.createBloom(width, height, r, figure));
@@ -466,7 +455,6 @@
             this.blooms = [];
             this.bloomsCache = cache;
         },
-
 
         toDataURL: function(type) {
             return this.canvas.toDataURL(type);
@@ -506,7 +494,7 @@
         canGrow: function() {
             return !!this.branchs.length;
         },
-        
+
         grow: function() {
             for (var i = 0; i < this.branchs.length; i++) {
                 if (this.branchs[i]) {
@@ -538,11 +526,11 @@
                 }
             }
         },
-        
+
         canFlower: function() {
             return !!this.blooms.length;
         },
-        
+
         flower: function(num) {
             var blooms = this.bloomsCache.splice(0, num);
             for (var i = 0; i < blooms.length; i++) {
@@ -562,11 +550,11 @@
                 height: height
             };
         },
-        
+
         setSpeed: function(k, speed) {
             this.record[k || "move"].speed = speed;
         },
-        
+
         move: function(k, x, y) {
             var rec = this.record[k || "move"];
             var point = rec.point,
@@ -586,19 +574,17 @@
             rec.point = new Point(i, j);
             rec.speed = speed * 0.95;
             if (rec.speed < 2) rec.speed = 2;
-            
+
             return i < x || j < y;
         },
 
         addPetal: function() {
-            var x = random(this.width * 0.25, this.width * 0.85);
-            var y = random(-30, -10);
+            var x = random(this.width * 0.15, this.width * 0.92);
+            var y = random(-40, -10);
             this.petals.push(new SakuraPetal(this, x, y));
         },
 
-        addFlower: function(x, y) {
-            this.flowers.push(new SakuraFlower(this, x, y));
-        },
+        addFlower: function(x, y) {},
 
         updateWind: function() {
             this.windPhase += 0.008;
@@ -611,40 +597,63 @@
 
         jump: function() {
             this.updateWind();
-            
+
+            // Subtle warm ambient glow
+            var ctx = this.ctx;
+            var grd = ctx.createRadialGradient(
+                this.width * 0.55, this.height * 0.88, 10,
+                this.width * 0.55, this.height * 0.5, this.width * 0.5
+            );
+            grd.addColorStop(0, 'rgba(255, 200, 185, 0.022)');
+            grd.addColorStop(0.5, 'rgba(255, 185, 200, 0.01)');
+            grd.addColorStop(1, 'rgba(255, 180, 200, 0)');
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, this.width, this.height);
+
+            // Bokeh particles (background layer)
+            for (var i = 0; i < this.bokeh.length; i++) {
+                this.bokeh[i].update();
+            }
+
+            // Falling petals
             for (var i = this.petals.length - 1; i >= 0; i--) {
                 if (!this.petals[i].update(this.wind)) {
                     this.petals.splice(i, 1);
                 }
             }
-            
+
+            // Floating hearts
             for (var i = 0; i < this.blooms.length; i++) {
                 this.blooms[i].jump();
             }
-            
+
             if ((this.blooms.length && this.blooms.length < 3) || !this.blooms.length) {
                 var bloom = this.opt.bloom || {};
                 var width = bloom.width || this.width;
                 var height = bloom.height || this.height;
                 var figure = this.seed.heart.figure;
                 var r = 240;
-                
+
                 for (var i = 0; i < random(1, 2); i++) {
                     this.blooms.push(this.createBloom(
-                        width / 2 + width, height, r, figure, 
-                        null, 1, null, 1, 
-                        new Point(random(-100, 600), 720), 
+                        width / 2 + width, height, r, figure,
+                        null, 1, null, 1,
+                        new Point(random(-100, 600), 720),
                         random(200, 300)
                     ));
                 }
             }
-            
-            if (random(0, 100) < 12 && this.petals.length < 35) {
+
+            // More petals for dreamy atmosphere
+            if (random(0, 100) < 20 && this.petals.length < 55) {
                 this.addPetal();
             }
         }
     }
 
+    // ============================================================
+    // Branch - smooth tapered strokes with depth
+    // ============================================================
     Branch = function(tree, point1, point2, point3, radius, length, branchs) {
         this.tree = tree;
         this.point1 = point1;
@@ -655,7 +664,7 @@
         this.len = 0;
         this.t = 1 / (this.length - 1);
         this.branchs = branchs || [];
-        
+        this.prevPoint = null;
     }
 
     Branch.prototype = {
@@ -670,30 +679,64 @@
                 this.tree.addBranchs(this.branchs);
             }
         },
-        
+
         draw: function(p) {
             var ctx = this.tree.ctx;
-            
-            ctx.save();
-            ctx.beginPath();
-            
-            var gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, this.radius * 1.2);
-            gradient.addColorStop(0, 'rgb(75, 58, 50)');
-            gradient.addColorStop(0.6, 'rgb(58, 45, 38)');
-            gradient.addColorStop(1, 'rgb(48, 38, 32)');
-            
-            ctx.fillStyle = gradient;
-            ctx.arc(p.x, p.y, this.radius, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.restore();
+            var lineW = Math.max(this.radius * 2, 0.8);
+
+            if (this.prevPoint) {
+                ctx.save();
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+
+                ctx.beginPath();
+                ctx.moveTo(this.prevPoint.x, this.prevPoint.y);
+                ctx.lineTo(p.x, p.y);
+
+                if (lineW > 20) {
+                    // Trunk - 3-layer depth
+                    ctx.lineWidth = lineW;
+                    ctx.strokeStyle = 'rgb(40, 28, 22)';
+                    ctx.stroke();
+
+                    ctx.lineWidth = lineW * 0.68;
+                    ctx.strokeStyle = 'rgb(58, 42, 34)';
+                    ctx.stroke();
+
+                    ctx.lineWidth = lineW * 0.22;
+                    ctx.strokeStyle = 'rgb(82, 62, 48)';
+                    ctx.stroke();
+                } else if (lineW > 6) {
+                    // Medium branch - 2-layer
+                    ctx.lineWidth = lineW;
+                    ctx.strokeStyle = 'rgb(48, 35, 28)';
+                    ctx.stroke();
+
+                    ctx.lineWidth = lineW * 0.45;
+                    ctx.strokeStyle = 'rgb(70, 52, 42)';
+                    ctx.stroke();
+                } else {
+                    // Thin twig
+                    ctx.lineWidth = lineW;
+                    ctx.strokeStyle = 'rgb(74, 56, 44)';
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+
+            this.prevPoint = p;
         }
     }
 
+    // ============================================================
+    // Bloom - glowing hearts
+    // ============================================================
     Bloom = function(tree, point, figure, color, alpha, angle, scale, place, speed) {
         this.tree = tree;
         this.point = point;
         this.figure = figure;
-        
+
         var baseColor = SAKURA_PINK[random(0, SAKURA_PINK.length - 1)];
         this.color = baseColor;
         this.alpha = alpha || randomFloat(0.7, 0.95);
@@ -702,7 +745,7 @@
         this.place = place;
         this.speed = speed;
     }
-    
+
     Bloom.prototype = {
         flower: function() {
             this.draw();
@@ -711,23 +754,27 @@
                 this.tree.removeBloom(this);
             }
         },
-        
+
         draw: function() {
             var ctx = this.tree.ctx;
-            
+
             ctx.save();
             ctx.translate(this.point.x, this.point.y);
             ctx.scale(this.scale, this.scale);
             ctx.rotate(this.angle);
             ctx.globalAlpha = this.alpha;
-            
+
+            // Ethereal glow
+            ctx.shadowBlur = 14;
+            ctx.shadowColor = 'rgba(255, 165, 190, 0.5)';
+
             var gradient = ctx.createRadialGradient(0, -5, 0, 0, -5, 18);
-            gradient.addColorStop(0, 'rgba(248, 242, 238, 0.85)');
-            gradient.addColorStop(0.4, 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ', 0.7)');
-            gradient.addColorStop(1, 'rgba(' + (this.color.r - 15) + ',' + (this.color.g - 15) + ',' + (this.color.b - 10) + ', 0.6)');
-            
+            gradient.addColorStop(0, 'rgba(255, 250, 248, 0.92)');
+            gradient.addColorStop(0.35, 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ', 0.8)');
+            gradient.addColorStop(1, 'rgba(' + (this.color.r - 10) + ',' + (this.color.g - 10) + ',' + (this.color.b - 8) + ', 0.55)');
+
             ctx.fillStyle = gradient;
-            
+
             ctx.beginPath();
             ctx.moveTo(0, 0);
             for (var i = 0; i < this.figure.length; i++) {
@@ -736,16 +783,18 @@
             }
             ctx.closePath();
             ctx.fill();
-            
-            ctx.globalAlpha = 0.35;
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+
+            // Bright highlight
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 0.4;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
             ctx.beginPath();
-            ctx.ellipse(-4, -6, 2.5, 2, -0.3, 0, Math.PI * 2);
+            ctx.ellipse(-4, -6, 2.8, 2.2, -0.3, 0, Math.PI * 2);
             ctx.fill();
-            
+
             ctx.restore();
         },
-        
+
         jump: function() {
             if (this.point.x < -20 || this.point.y > this.tree.height + 20) {
                 this.tree.removeBloom(this);
