@@ -513,23 +513,8 @@
         },
 
         initBloom: function() {
-            var bloom = this.opt.bloom || {};
-            var cache = [],
-                width = bloom.width || this.width,
-                height = bloom.height || this.height,
-                figure = this.seed.heart.figure;
-
-            var together = new Date(config.date);
-            var now = new Date();
-            var days = Math.floor((now.getTime() - together.getTime()) / (24 * 60 * 60 * 1000));
-            var numHearts = Math.max(1, Math.min(days, 400));
-
-            var r = 240;
-            for (var i = 0; i < numHearts; i++) {
-                cache.push(this.createBloom(width, height, r, figure));
-            }
             this.blooms = [];
-            this.bloomsCache = cache;
+            this.bloomsCache = [];
         },
 
         toDataURL: function(type) {
@@ -684,27 +669,6 @@
 
             for (var i = 0; i < this.flowers.length; i++) {
                 this.flowers[i].grow();
-            }
-
-            for (var i = 0; i < this.blooms.length; i++) {
-                this.blooms[i].jump();
-            }
-
-            if ((this.blooms.length && this.blooms.length < 3) || !this.blooms.length) {
-                var bloom = this.opt.bloom || {};
-                var width = bloom.width || this.width;
-                var height = bloom.height || this.height;
-                var figure = this.seed.heart.figure;
-                var r = 240;
-
-                for (var i = 0; i < random(1, 2); i++) {
-                    this.blooms.push(this.createBloom(
-                        width / 2 + width, height, r, figure,
-                        null, 1, null, 1,
-                        new Point(random(-100, 600), 720),
-                        random(200, 300)
-                    ));
-                }
             }
 
             // More petals for that anime atmosphere
