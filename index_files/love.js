@@ -21,17 +21,17 @@
     }
 
     // ============================================================
-    // Vibrant sakura palette
+    // Purple-blue palette
     // ============================================================
     var SAKURA_PINK = [
-        {r: 255, g: 183, b: 197, a: 0.85},
-        {r: 255, g: 200, b: 212, a: 0.82},
-        {r: 252, g: 170, b: 192, a: 0.78},
-        {r: 255, g: 218, b: 225, a: 0.90},
-        {r: 248, g: 160, b: 185, a: 0.72},
-        {r: 255, g: 192, b: 205, a: 0.85},
-        {r: 255, g: 230, b: 236, a: 0.92},
-        {r: 245, g: 148, b: 178, a: 0.75}
+        {r: 175, g: 165, b: 255, a: 0.85},
+        {r: 188, g: 180, b: 255, a: 0.82},
+        {r: 160, g: 148, b: 248, a: 0.78},
+        {r: 202, g: 198, b: 255, a: 0.90},
+        {r: 148, g: 135, b: 242, a: 0.72},
+        {r: 182, g: 172, b: 255, a: 0.85},
+        {r: 212, g: 208, b: 255, a: 0.92},
+        {r: 140, g: 125, b: 238, a: 0.75}
     ];
 
     // ============================================================
@@ -97,7 +97,7 @@
     Seed = function(tree, point, scale, color) {
         this.tree = tree;
         var scale = scale || 1;
-        var color = color || '#c8a0a0';
+        var color = color || '#a0a0d0';
 
         this.heart = {
             point  : point,
@@ -149,9 +149,9 @@
             ctx.translate(point.x, point.y);
 
             var gradient = ctx.createRadialGradient(0, -5 * scale, 0, 0, -5 * scale, 25 * scale);
-            gradient.addColorStop(0, '#e0c0c0');
-            gradient.addColorStop(0.5, '#c8a0a0');
-            gradient.addColorStop(1, '#b08888');
+            gradient.addColorStop(0, '#c8c0e8');
+            gradient.addColorStop(0.5, '#a0a0d0');
+            gradient.addColorStop(1, '#8888b8');
 
             ctx.fillStyle = gradient;
 
@@ -285,9 +285,9 @@
             ctx.save();
             ctx.globalAlpha = a;
             var g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-            g.addColorStop(0, 'rgba(255, 240, 248, 0.9)');
-            g.addColorStop(0.4, 'rgba(255, 205, 220, 0.4)');
-            g.addColorStop(1, 'rgba(255, 185, 205, 0)');
+            g.addColorStop(0, 'rgba(220, 218, 255, 0.9)');
+            g.addColorStop(0.4, 'rgba(180, 175, 255, 0.4)');
+            g.addColorStop(1, 'rgba(160, 155, 255, 0)');
             ctx.fillStyle = g;
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -417,7 +417,7 @@
             var x = seed.x || this.width / 2;
             var y = seed.y || this.height / 2;
             var point = new Point(x, y);
-            var color = seed.color || '#e8a4b8';
+            var color = seed.color || '#a4a8e8';
             var scale = seed.scale || 1;
             this.seed = new Seed(this, point, scale, color);
         },
@@ -604,9 +604,9 @@
                 this.width * 0.55, this.height * 0.88, 10,
                 this.width * 0.55, this.height * 0.5, this.width * 0.5
             );
-            grd.addColorStop(0, 'rgba(255, 200, 185, 0.022)');
-            grd.addColorStop(0.5, 'rgba(255, 185, 200, 0.01)');
-            grd.addColorStop(1, 'rgba(255, 180, 200, 0)');
+            grd.addColorStop(0, 'rgba(185, 180, 255, 0.022)');
+            grd.addColorStop(0.5, 'rgba(175, 170, 255, 0.01)');
+            grd.addColorStop(1, 'rgba(165, 160, 255, 0)');
             ctx.fillStyle = grd;
             ctx.fillRect(0, 0, this.width, this.height);
 
@@ -766,10 +766,10 @@
 
             // Ethereal glow
             ctx.shadowBlur = 14;
-            ctx.shadowColor = 'rgba(255, 165, 190, 0.5)';
+            ctx.shadowColor = 'rgba(150, 140, 255, 0.5)';
 
             var gradient = ctx.createRadialGradient(0, -5, 0, 0, -5, 18);
-            gradient.addColorStop(0, 'rgba(255, 250, 248, 0.92)');
+            gradient.addColorStop(0, 'rgba(240, 238, 255, 0.92)');
             gradient.addColorStop(0.35, 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ', 0.8)');
             gradient.addColorStop(1, 'rgba(' + (this.color.r - 10) + ',' + (this.color.g - 10) + ',' + (this.color.b - 8) + ', 0.55)');
 
